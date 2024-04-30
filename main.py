@@ -88,16 +88,16 @@ while läuft:
     tasten = pygame.key.get_pressed()
 
     # Spielerbewegungen verarbeiten und Energie abziehen
-    if tasten[pygame.K_LEFT] and spieler_energie > 0 and len(abgelegte_objekte) != 5 and len(computer_abgelegte_objekte) != 5:
+    if tasten[pygame.K_LEFT] and spieler_energie > 0 and len(abgelegte_objekte) != 16 and len(computer_abgelegte_objekte) != 4:
         spieler_x -= spieler_geschwindigkeit
         spieler_energie -= 0.010
-    if tasten[pygame.K_RIGHT] and spieler_energie > 0 and len(abgelegte_objekte) != 5 and len(computer_abgelegte_objekte) != 5:
+    if tasten[pygame.K_RIGHT] and spieler_energie > 0 and len(abgelegte_objekte) != 16 and len(computer_abgelegte_objekte) != 4:
         spieler_x += spieler_geschwindigkeit
         spieler_energie -= 0.010
-    if tasten[pygame.K_UP] and spieler_energie > 0 and len(abgelegte_objekte) != 5 and len(computer_abgelegte_objekte) != 5:
+    if tasten[pygame.K_UP] and spieler_energie > 0 and len(abgelegte_objekte) != 16 and len(computer_abgelegte_objekte) != 4:
         spieler_y -= spieler_geschwindigkeit
         spieler_energie -= 0.010
-    if tasten[pygame.K_DOWN] and spieler_energie > 0 and len(abgelegte_objekte) != 5 and len(computer_abgelegte_objekte) != 5:
+    if tasten[pygame.K_DOWN] and spieler_energie > 0 and len(abgelegte_objekte) != 16 and len(computer_abgelegte_objekte) != 4:
         spieler_y += spieler_geschwindigkeit
         spieler_energie -= 0.010
 
@@ -162,7 +162,7 @@ while läuft:
     if spieler_rechteck.colliderect(tankstelle_rechteck):
         spieler_energie = 100
 
-    if spieler_rechteck.colliderect(erz_objekt_rechteck) and gesammelte_objekte < 5:
+    if spieler_rechteck.colliderect(erz_objekt_rechteck) and gesammelte_objekte < 16:
         gesammelte_objekte += 1
         erz_objekt_x = -100
 
@@ -208,22 +208,16 @@ while läuft:
 
     # Nachricht anzeigen, wenn die Energie leer ist und die E-Taste zum Aufladen gedrückt wird
     if spieler_energie <= 0:
-        nachricht_text = schrift.render("Deine Energie ist leer, drücke E um sie wieder aufzuladen", True, SCHWARZ)
+        nachricht_text = schrift.render("Du hast das Spiel verloren! Drücke 'R' für Restart", True, SCHWARZ)
         bildschirm.blit(nachricht_text, (200, 300))
 
-    # Spiel zurücksetzen, wenn die Energie leer ist und E gedrückt wird
-    if spieler_energie <= 0 and tasten[pygame.K_e]:
-        spieler_energie = 100
-        spieler_x = 400
-        spieler_y = 300
-
     # Nachricht anzeigen, wenn alle Objekte abgelegt wurden und die R-Taste zum Neustart gedrückt wird
-    if len(abgelegte_objekte) == 5:
-        nachricht_text = schrift.render("Glückwunsch, du hast alle Objekte abgelegt! R für restart", True, SCHWARZ)
+    if len(abgelegte_objekte) == 16:
+        nachricht_text = schrift.render("Glückwunsch, du hast alle das Spiel gewonnen! Drücke 'R' für Restart", True, SCHWARZ)
         bildschirm.blit(nachricht_text, (200, 300))
 
     # Spiel zurücksetzen, wenn alle Objekte abgelegt wurden und R gedrückt wird
-    if len(abgelegte_objekte) == 5 and tasten[pygame.K_r]:
+    if len(abgelegte_objekte) == 16 or spieler_energie <= 0 and tasten[pygame.K_r]:
         spieler_x = 400
         spieler_y = 300
         spieler_energie = 100
@@ -234,7 +228,7 @@ while läuft:
         computer_abgelegte_objekte = []
 
     # Nachricht anzeigen, wenn alle Objekte gestohlen wurden und die R-Taste zum Neustart gedrückt wird
-    if len(computer_abgelegte_objekte) == 5:
+    if len(computer_abgelegte_objekte) == 4:
         nachricht_text = schrift.render("Der Computer hat alle Objekte gestohlen! R für restart", True, SCHWARZ)
         bildschirm.blit(nachricht_text, (200, 300))
 

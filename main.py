@@ -18,9 +18,14 @@ GRÜN = (0, 255, 0)
 ROT = (255, 0, 0)
 BLAU = (0, 0, 255)
 
+# Festlegen der Größe für Spieler und Objekte
+SPIELER_GROESSE = 50
+OBJEKT_GROESSE = 30
+
 # Initialisierung des Bildschirms
 bildschirm = pygame.display.set_mode((BREITE, HÖHE))  # Erstellen des Fensters
 pygame.display.set_caption("Erzsammler")  # Titel des Fensters setzen
+schrift = pygame.font.SysFont(None, 24) # Schriftart und -größe festlegen
 
 
 def bild_laden(name):
@@ -36,43 +41,36 @@ def bild_laden(name):
     except pygame.error as e:
         raise IOError(f"Fehler beim Laden des Bildes {name}.png: {e}")
 
-# Festlegen der Größe für Spieler und Objekte
-SPIELER_GROESSE = 50
-OBJEKT_GROESSE = 30
-
-# Festlegen der Textschriftart
-schrift = pygame.font.SysFont(None, 24)
-
 # Festlegen der Spielerposition und -eigenschaften
+spieler_bild = bild_laden('lkw')  # Bild des Spielers
 spieler_x = 400  # x-Position des Spielers
 spieler_y = 300  # y-Position des Spielers
-spieler_bild = bild_laden('lkw')  # Bild des Spielers
 spieler_geschwindigkeit = 1  # Geschwindigkeit, mit der sich der Spieler bewegt
 spieler_energie = 100  # Energie des Spielers
 gesammelte_objekte = 0  # Anzahl der vom Spieler gesammelten Objekte
 abgelegte_objekte = []  # Liste der abgelegten Objekte des Spielers
 
 # Festlegen der Computerposition und -eigenschaften
-computer_start_x = 100  # Start-X-Position des Computers
-computer_start_y = 500  # Start-Y-Position des Computers
 computer_bild = bild_laden('helikopter')  # Bild des Computers
-computer_x = computer_start_x  # x-Position des Computers
-computer_y = computer_start_y  # y-Position des Computers
+computer_x = 100  # x-Position des Computers
+computer_y = 500  # y-Position des Computers
 computer_geschwindigkeit = 0.1  # Geschwindigkeit, mit der sich der Computer bewegt
 computer_objekt = None  # Objekt, das der Computer gestohlen hat
+computer_abgelegte_objekte = []  # Liste der abgelegten Objekte des Computers
+
+# Festlegen des Landeplatzes des Computers
 computer_ablageplatz_x = 100  # Ablage-X-Position des Computers
 computer_ablageplatz_y = 500  # Ablage-Y-Position des Computers
 computer_landeplatz = bild_laden('landeplatz')  # Bild des Ablageplatzes
-computer_abgelegte_objekte = []  # Liste der abgelegten Objekte des Computers
 
-# Festlegen der Anfangspositionen der Spielobjekte
+# Festlegen der Anfangspositionen der Tankstelle, des Erzobjekts und des Ablageplatzes
 tankstelle_x, tankstelle_y = 700, 500  # Position des Energiegebers
 tankstelle_bild = bild_laden('tankstelle')  # Bild des Energiegebers
 
 erz_objekt_x, erz_objekt_y = 600, 400  # Position des Sammelobjekts
 erz_objekt_bild = bild_laden('erzquelle')  # Bild des Sammelobjekts
 
-ablageplatz_x, ablageplatz_y = 100, 100  # Position des Ablageplatzes
+ablageplatz_x, ablageplatz_y = 500, 100  # Position des Ablageplatzes
 lager_bild = bild_laden('lager')  # Bild des Ablageplatzes
 
 # Variable zur Verfolgung des Spielstatus
@@ -100,6 +98,20 @@ while läuft:
     if tasten[pygame.K_DOWN] and spieler_energie > 0 and len(abgelegte_objekte) != 16 and len(computer_abgelegte_objekte) != 4:
         spieler_y += spieler_geschwindigkeit
         spieler_energie -= 0.010
+
+    # Tastenkombinationen für Spieler-Geschwindigkeitseinstellungen
+    if tasten[pygame.K_s]:
+        if tasten[pygame.K_PLUS] or tasten[pygame.K_EQUALS]:  # Alternative: pygame.K_EQUALS
+            spieler_geschwindigkeit = min(spieler_geschwindigkeit + 0.001, 1.0)  # Maximalwert von 1.0
+        elif tasten[pygame.K_MINUS]:
+            spieler_geschwindigkeit = max(spieler_geschwindigkeit - 0.001, 0.1)  # Minimalwert von 0.1
+
+    # Tastenkombinationen für Computer-Geschwindigkeitseinstellungen
+    if tasten[pygame.K_c]:
+        if tasten[pygame.K_PLUS] or tasten[pygame.K_EQUALS]:  # Alternative: pygame.K_EQUALS
+            computer_geschwindigkeit = min(computer_geschwindigkeit + 0.001, 1.0)  # Maximalwert von 1.0
+        elif tasten[pygame.K_MINUS]:
+            computer_geschwindigkeit = max(computer_geschwindigkeit - 0.001, 0.1)  # Minimalwert von 0.1
 
     # Spielerposition einschränken, um innerhalb des Bildschirms zu bleiben
     spieler_x = max(0, min(spieler_x, BREITE - SPIELER_GROESSE))
@@ -193,23 +205,37 @@ while läuft:
     bildschirm.blit(computer_bild, (computer_x, computer_y)) # Computer zeichnen
     bildschirm.blit(computer_landeplatz, (computer_ablageplatz_x, computer_ablageplatz_y)) # Landeplatz des Computers zeichnen
 
-
     # Textinformationen zum Spielstatus anzeigen
     energie_text = schrift.render(f'Energie: {spieler_energie:.2f}', True, SCHWARZ)
     bildschirm.blit(energie_text, (10, 10))
     objekte_text = schrift.render(f'Gesammelte Objekte: {gesammelte_objekte}', True, SCHWARZ)
     bildschirm.blit(objekte_text, (10, 30))
-    abgelegte_objekte_text = schrift.render(f'Abgelegte Objekte: {len(abgelegte_objekte)}/5', True, SCHWARZ)
+    abgelegte_objekte_text = schrift.render(f'Abgelegte Objekte: {len(abgelegte_objekte)}/16', True, SCHWARZ)
     bildschirm.blit(abgelegte_objekte_text, (10, 50))
-    computer_abgelegte_objekte_text = schrift.render(f'Computer Abgelegte Objekte: {len(computer_abgelegte_objekte)}/5', True, SCHWARZ)
+    computer_abgelegte_objekte_text = schrift.render(f'Computer Abgelegte Objekte: {len(computer_abgelegte_objekte)}/4', True, SCHWARZ)
     bildschirm.blit(computer_abgelegte_objekte_text, (10, 70))
-    gestohlene_objekte_text = schrift.render(f'Gestohlene Objekte: {len(computer_abgelegte_objekte)}', True, SCHWARZ)
-    bildschirm.blit(gestohlene_objekte_text, (10, 90))
+
+    # Textinformationen zur Geschwindigkeit anzeigen
+    spieler_geschwindigkeit_text = schrift.render(f'Spieler Geschwindigkeit: {spieler_geschwindigkeit:.2f}', True, SCHWARZ)
+    bildschirm.blit(spieler_geschwindigkeit_text, (10, 90))
+    computer_geschwindigkeit_text = schrift.render(f'Computer Geschwindigkeit: {computer_geschwindigkeit:.2f}', True, SCHWARZ)
+    bildschirm.blit(computer_geschwindigkeit_text, (10, 110))
 
     # Nachricht anzeigen, wenn die Energie leer ist und die E-Taste zum Aufladen gedrückt wird
     if spieler_energie <= 0:
         nachricht_text = schrift.render("Du hast das Spiel verloren! Drücke 'R' für Restart", True, SCHWARZ)
         bildschirm.blit(nachricht_text, (200, 300))
+
+    if spieler_energie <= 0 and tasten[pygame.K_r]:
+        spieler_x = 400
+        spieler_y = 300
+        spieler_energie = 100
+        gesammelte_objekte = 0
+        abgelegte_objekte = []
+        erz_objekt_x, erz_objekt_y = 600, 400
+        gestohlene_objekte = []
+        computer_objekt = None
+        computer_abgelegte_objekte = []
 
     # Nachricht anzeigen, wenn alle Objekte abgelegt wurden und die R-Taste zum Neustart gedrückt wird
     if len(abgelegte_objekte) == 16:
@@ -217,11 +243,12 @@ while läuft:
         bildschirm.blit(nachricht_text, (200, 300))
 
     # Spiel zurücksetzen, wenn alle Objekte abgelegt wurden und R gedrückt wird
-    if len(abgelegte_objekte) == 16 or spieler_energie <= 0 and tasten[pygame.K_r]:
+    if len(abgelegte_objekte) == 16 and tasten[pygame.K_r]:
         spieler_x = 400
         spieler_y = 300
         spieler_energie = 100
         gesammelte_objekte = 0
+        erz_objekt_x, erz_objekt_y = 600, 400
         abgelegte_objekte = []
         gestohlene_objekte = []
         computer_objekt = None
@@ -233,7 +260,7 @@ while läuft:
         bildschirm.blit(nachricht_text, (200, 300))
 
     # Spiel zurücksetzen, wenn alle Objekte gestohlen wurden und R gedrückt wird
-    if len(computer_abgelegte_objekte) == 5 and tasten[pygame.K_r]:
+    if len(computer_abgelegte_objekte) == 4 and tasten[pygame.K_r]:
         spieler_x = 400
         spieler_y = 300
         spieler_energie = 100

@@ -336,3 +336,5 @@ while läuft:
 # Pygame beenden
 pygame.quit()
 sys.exit()
+
+# test

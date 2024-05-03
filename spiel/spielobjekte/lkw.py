@@ -1,5 +1,6 @@
 from spiel.spielobjekte.basisobjekt import BasisObjekt
 from spiel.spielobjekte.erzmine import Erzmine
+from spiel.spielobjekte.helikopter import Helikopter
 from spiel.spielobjekte.lager import Lager
 from spiel.spielobjekte.tankstelle import Tankstelle
 
@@ -21,6 +22,8 @@ class LKW(BasisObjekt):
             self.lager_kollision(objekt)
         elif isinstance(objekt, Tankstelle):
             self.tankstelle_kollision()
+        elif isinstance(objekt, Helikopter):
+            self.helikopter_kollision()
 
     def erzmine_kollision(self, erzmine):
         if self.geladenes_erz < 50:
@@ -34,6 +37,10 @@ class LKW(BasisObjekt):
 
     def tankstelle_kollision(self):
         self.energie = 100
+
+    def helikopter_kollision(self):
+        if self.geladenes_erz >= 50:
+            self.geladenes_erz -= 50
 
     def bewegen(self, richtung):
         if richtung == "links":
@@ -56,5 +63,5 @@ class LKW(BasisObjekt):
     def set_ui_info(self):
         return [
             f'Energie: {int(self.energie)}%',
-            f'Geladenes Erz: {self.geladenes_erz}'
+            f'Geladenes Erz (L): {self.geladenes_erz}'
         ]

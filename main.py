@@ -3,6 +3,7 @@ import sys
 
 from UI import UI
 from spiel.spielobjekte.erzmine import Erzmine
+from spiel.spielobjekte.helikopter import Helikopter
 from spiel.spielobjekte.lager import Lager
 from spiel.spielobjekte.landeplatz import Landeplatz
 from spiel.spielobjekte.lkw import LKW
@@ -16,7 +17,7 @@ bildschirm = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Erzsammler")
 clock = pygame.time.Clock()
 
-# Erzmine, Lager, Tankstelle, Landeplatz und LKW erstellen
+# Erzmine, Lager, Tankstelle, Landeplatz, Helikopter und LKW erstellen
 erzmine_bild = bild_laden("erzmine")
 erzmine = Erzmine(erzmine_bild, 200, 200, 1000)
 
@@ -32,8 +33,11 @@ landeplatz = Landeplatz(landeplatz_bild, 600, 400, 0)
 lkw_bild = bild_laden("lkw")
 lkw = LKW(lkw_bild, 400, 300)
 
+helikopter_bild = bild_laden("helikopter")
+helikopter = Helikopter(helikopter_bild, 200, 400, lkw)
+
 # Eine Liste für alle Spielobjekte
-spielobjekte = [erzmine, lager, tankstelle, landeplatz, lkw]
+spielobjekte = [erzmine, lager, tankstelle, landeplatz, helikopter, lkw]
 
 # Tastenzustände
 tasten = {
@@ -76,6 +80,9 @@ while läuft:
 
     if pygame.sprite.collide_mask(lkw, tankstelle):
         lkw.kollision(tankstelle)
+
+    if pygame.sprite.collide_mask(helikopter, lkw):
+        helikopter.kollision(lkw)
 
     bildschirm.fill((255, 255, 255))
 

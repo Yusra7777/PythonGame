@@ -15,12 +15,8 @@ class BasisObjekt:
     def zeichnen(self, bildschirm):
         bildschirm.blit(self.bild, (self.x, self.y))
 
-    def kollision(self, *andere):
-        for objekt in andere:
-            if self.rect.colliderect(objekt.rect):
-                objekt.kollision(self)
-                return True
-        return False
+    def kollision(self, andere):
+        return self.rect.colliderect(andere.rect)
 
     def set_ui_info(self):
         return []

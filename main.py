@@ -69,6 +69,7 @@ tankstelle_bild = bild_laden('tankstelle')  # Bild des Energiegebers
 
 erz_objekt_x, erz_objekt_y = 600, 400  # Position des Sammelobjekts
 erz_objekt_bild = bild_laden('erzquelle')  # Bild des Sammelobjekts
+erzquelle_vorkommen = 20  # Anzahl der Sammelobjekte
 
 ablageplatz_x, ablageplatz_y = 500, 100  # Position des Ablageplatzes
 lager_bild = bild_laden('lager')  # Bild des Ablageplatzes
@@ -176,6 +177,7 @@ while läuft:
 
     if spieler_rechteck.colliderect(erz_objekt_rechteck) and gesammelte_objekte < 16:
         gesammelte_objekte += 1
+        erzquelle_vorkommen -= 1
         erz_objekt_x = -100
 
     if spieler_rechteck.colliderect(lager_rechteck) and gesammelte_objekte > 0:
@@ -206,20 +208,23 @@ while läuft:
     bildschirm.blit(computer_landeplatz, (computer_ablageplatz_x, computer_ablageplatz_y)) # Landeplatz des Computers zeichnen
 
     # Textinformationen zum Spielstatus anzeigen
-    energie_text = schrift.render(f'Energie: {spieler_energie:.2f}', True, SCHWARZ)
+    energie_text = schrift.render(f'Tank: {spieler_energie:.2f}', True, SCHWARZ)
     bildschirm.blit(energie_text, (10, 10))
-    objekte_text = schrift.render(f'Gesammelte Objekte: {gesammelte_objekte}', True, SCHWARZ)
+    objekte_text = schrift.render(f'Beladung: {gesammelte_objekte}', True, SCHWARZ)
     bildschirm.blit(objekte_text, (10, 30))
-    abgelegte_objekte_text = schrift.render(f'Abgelegte Objekte: {len(abgelegte_objekte)}/16', True, SCHWARZ)
+    abgelegte_objekte_text = schrift.render(f'Gesammeltes Erz(LKW): {len(abgelegte_objekte)}/16', True, SCHWARZ)
     bildschirm.blit(abgelegte_objekte_text, (10, 50))
-    computer_abgelegte_objekte_text = schrift.render(f'Computer Abgelegte Objekte: {len(computer_abgelegte_objekte)}/4', True, SCHWARZ)
+    computer_abgelegte_objekte_text = schrift.render(f'Gestohlenes Erz(Helikopter): {len(computer_abgelegte_objekte)}/4', True, SCHWARZ)
     bildschirm.blit(computer_abgelegte_objekte_text, (10, 70))
+    erquelle_vorkommen_text = schrift.render(f'Verbleibende Erzquellen: {erzquelle_vorkommen}', True, SCHWARZ)
+    bildschirm.blit(erquelle_vorkommen_text, (10, 90))
 
     # Textinformationen zur Geschwindigkeit anzeigen
     spieler_geschwindigkeit_text = schrift.render(f'Spieler Geschwindigkeit: {spieler_geschwindigkeit:.2f}', True, SCHWARZ)
-    bildschirm.blit(spieler_geschwindigkeit_text, (10, 90))
+    bildschirm.blit(spieler_geschwindigkeit_text, (10, 110))
     computer_geschwindigkeit_text = schrift.render(f'Computer Geschwindigkeit: {computer_geschwindigkeit:.2f}', True, SCHWARZ)
-    bildschirm.blit(computer_geschwindigkeit_text, (10, 110))
+    bildschirm.blit(computer_geschwindigkeit_text, (10, 130))
+
 
     # Nachricht anzeigen, wenn die Energie leer ist und die E-Taste zum Aufladen gedrückt wird
     if spieler_energie <= 0:

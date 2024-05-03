@@ -3,12 +3,12 @@ import sys
 
 from UI import UI
 from spiel.spielobjekte.erzmine import Erzmine
-from spiel.spielobjekte.helikopter import Helikopter
 from spiel.spielobjekte.lager import Lager
-from spiel.spielobjekte.landeplatz import Landeplatz
 from spiel.spielobjekte.lkw import LKW
 from spiel.spielobjekte.basisobjekt import bild_laden
 from spiel.spielobjekte.tankstelle import Tankstelle
+from spiel.spielobjekte.landeplatz import Landeplatz
+from spiel.spielobjekte.helikopter import Helikopter
 
 # Pygame initialisieren
 pygame.init()
@@ -83,6 +83,9 @@ while läuft:
 
     if pygame.sprite.collide_mask(helikopter, lkw):
         helikopter.kollision(lkw)
+
+    if pygame.sprite.collide_mask(helikopter, landeplatz):
+        helikopter.kollision(landeplatz)
 
     bildschirm.fill((255, 255, 255))
 

@@ -1,8 +1,8 @@
 from spiel.spielobjekte.basisobjekt import BasisObjekt
 from spiel.spielobjekte.erzmine import Erzmine
-from spiel.spielobjekte.helikopter import Helikopter
 from spiel.spielobjekte.lager import Lager
 from spiel.spielobjekte.tankstelle import Tankstelle
+from spiel.spielobjekte.helikopter import Helikopter
 
 
 class LKW(BasisObjekt):

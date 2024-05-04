@@ -24,8 +24,7 @@ class LKW(BasisObjekt):
         elif isinstance(objekt, Tankstelle):
             self.tankstelle_kollision()
         elif isinstance(objekt, Helikopter):
-            self.helikopter_kollision()
-
+            self.helikopter_kollision(objekt)
     def erzmine_kollision(self, erzmine):
         if self.geladenes_erz < 50:
             self.geladenes_erz += 50
@@ -39,9 +38,9 @@ class LKW(BasisObjekt):
     def tankstelle_kollision(self):
         self.energie = 100
 
-    def helikopter_kollision(self):
+    def helikopter_kollision(self, helikopter):
         if self.geladenes_erz >= 50:
-            self.geladenes_erz -= 50
+            helikopter.erz_stehlen(self)
 
     def bewegen(self, richtung):
         if richtung == "links":

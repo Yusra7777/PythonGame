@@ -7,7 +7,13 @@ class Landeplatz(BasisObjekt):
         self.gestohlenes_erz = gestohlenes_erz
 
     def kollision(self, hubschrauber):
-        self.gestohlenes_erz += 50
+        self.erz_hinzufügen(hubschrauber.geladenes_erz)
+
+    def position_abrufen(self):
+        return self.x, self.y
+
+    def erz_hinzufügen(self, erz):
+        self.gestohlenes_erz += erz
 
     def set_ui_info(self):
         return [

@@ -34,7 +34,7 @@ lkw_bild = bild_laden("lkw")
 lkw = LKW(lkw_bild, 400, 300)
 
 helikopter_bild = bild_laden("helikopter")
-helikopter = Helikopter(helikopter_bild, 200, 400, lkw)
+helikopter = Helikopter(helikopter_bild, 200, 400, lkw, landeplatz)
 
 # Eine Liste für alle Spielobjekte
 spielobjekte = [erzmine, lager, tankstelle, landeplatz, helikopter, lkw]

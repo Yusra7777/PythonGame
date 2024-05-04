@@ -2,6 +2,7 @@ from spiel.spielobjekte.basisobjekt import BasisObjekt
 from spiel.spielobjekte.erzmine import Erzmine
 from spiel.spielobjekte.lager import Lager
 from spiel.spielobjekte.tankstelle import Tankstelle
+from spiel.spielobjekte.landeplatz import Landeplatz
 from spiel.spielobjekte.helikopter import Helikopter
 
 
@@ -14,9 +15,6 @@ class LKW(BasisObjekt):
 
     def aktualisieren(self):
         self.rect.topleft = (self.x, self.y)
-
-    def position_abrufen(self):
-        return self.x, self.y
 
     def kollision(self, objekt):
         if isinstance(objekt, Erzmine):

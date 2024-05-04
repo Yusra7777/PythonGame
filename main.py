@@ -71,27 +71,17 @@ while läuft:
     if tasten[pygame.K_DOWN]:
         lkw.bewegen("unten")
 
+    bildschirm.fill((255, 255, 255))
+
     # Helikopter aktualisieren
     helikopter.aktualisieren()
 
     # Kollisionen überprüfen
-    if pygame.sprite.collide_mask(lkw, erzmine):
-        lkw.kollision(erzmine)
+    for objekt in spielobjekte:
+        if pygame.sprite.collide_mask(lkw, objekt):
+            lkw.kollision(objekt)
 
-    if pygame.sprite.collide_mask(lkw, lager):
-        lkw.kollision(lager)
-
-    if pygame.sprite.collide_mask(lkw, tankstelle):
-        lkw.kollision(tankstelle)
-
-    if pygame.sprite.collide_mask(helikopter, lkw):
-        helikopter.kollision(lkw)
-
-    if pygame.sprite.collide_mask(helikopter, landeplatz):
-        helikopter.kollision(landeplatz)
-
-    bildschirm.fill((255, 255, 255))
-
+    # Objekte zeichnen und UI aktualisieren
     for objekt in spielobjekte:
         objekt.zeichnen(bildschirm)
     ui.zeichnen(bildschirm)

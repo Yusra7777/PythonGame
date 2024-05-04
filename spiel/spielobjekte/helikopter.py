@@ -1,8 +1,6 @@
-import math
-
 from spiel.spielobjekte.basisobjekt import BasisObjekt
 from spiel.spielobjekte.landeplatz import Landeplatz
-
+import math
 
 class Helikopter(BasisObjekt):
     def __init__(self, bild, x, y, lkw):
@@ -10,6 +8,9 @@ class Helikopter(BasisObjekt):
         self.lkw = lkw
         self.geschwindigkeit = 2.5
         self.geladenes_erz = 0
+
+    def aktualisieren(self):
+        self.verfolge_lkw()
 
     def verfolge_lkw(self):
         lkw_x, lkw_y = self.lkw.position_abrufen()
@@ -24,25 +25,6 @@ class Helikopter(BasisObjekt):
 
         self.x += richtung_x * self.geschwindigkeit
         self.y += richtung_y * self.geschwindigkeit
-
-    def aktualisieren(self):
-        self.verfolge_lkw()
-
-    def kollision(self, objekt):
-        if isinstance(objekt, self.lkw.__class__):
-            self.lkw_kollision(objekt)
-        if isinstance(objekt, Landeplatz):
-            self.landeplatz_kollision(objekt)
-
-    def lkw_kollision(self, objekt):
-        if self.geladenes_erz < 50:
-            self.geladenes_erz += 50
-            objekt.kollision(self)
-
-    def landeplatz_kollision(self, objekt):
-        if self.geladenes_erz == 50:
-            self.geladenes_erz -= 50
-            objekt.kollision(self)
 
     def set_ui_info(self):
         return [

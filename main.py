@@ -71,6 +71,9 @@ while läuft:
     if tasten[pygame.K_DOWN]:
         lkw.bewegen("unten")
 
+    # Helikopter aktualisieren
+    helikopter.aktualisieren()
+
     # Kollisionen überprüfen
     if pygame.sprite.collide_mask(lkw, erzmine):
         lkw.kollision(erzmine)

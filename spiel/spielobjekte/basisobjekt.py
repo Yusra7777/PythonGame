@@ -21,6 +21,9 @@ class BasisObjekt:
     def set_ui_info(self):
         return []
 
+    def position_abrufen(self):
+        return self.x, self.y
+
 
 def bild_laden(name):
     basispfad = os.path.dirname(os.path.abspath(__file__))

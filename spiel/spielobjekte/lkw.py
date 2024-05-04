@@ -15,6 +15,9 @@ class LKW(BasisObjekt):
     def aktualisieren(self):
         self.rect.topleft = (self.x, self.y)
 
+    def position_abrufen(self):
+        return self.x, self.y
+
     def kollision(self, objekt):
         if isinstance(objekt, Erzmine):
             self.erzmine_kollision(objekt)
